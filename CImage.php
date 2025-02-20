@@ -187,7 +187,7 @@ class CImage
     /**
      * Target filename, with path, to save resulting image in.
      */
-    private $cacheFileName;
+    protected $cacheFileName;
 
 
 
