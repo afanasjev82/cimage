@@ -1,9 +1,12 @@
 <?php
+
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * A testclass
  *
  */
-class CImageRemoteDownloadTest extends \PHPUnit_Framework_TestCase
+class CImageRemoteDownloadTest extends \PHPUnit\Framework\TestCase
 {
     /*
      * remote_whitelist
@@ -13,21 +16,19 @@ class CImageRemoteDownloadTest extends \PHPUnit_Framework_TestCase
         '^(?:images|photos-[a-z])\.ak\.instagram\.com$',
         '\.google\.com$',
     ];
-    
-    
-    
+
+
+
     /**
      * Provider for valid remote sources.
      *
      * @return array
      */
-    public function providerValidRemoteSource()
+    public static function providerValidRemoteSource()
     {
         return [
-            [
-                "http://dbwebb.se/img.jpg",
-                "https://dbwebb.se/img.jpg",
-            ],
+            ["http://dbwebb.se/img.jpg"],
+            ["https://dbwebb.se/img.jpg"],
         ];
     }
 
@@ -38,14 +39,12 @@ class CImageRemoteDownloadTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public function providerInvalidRemoteSource()
+    public static function providerInvalidRemoteSource()
     {
         return [
-            [
-                "ftp://dbwebb.se/img.jpg",
-                "dbwebb.se/img.jpg",
-                "img.jpg",
-            ],
+            ["ftp://dbwebb.se/img.jpg"],
+            ["dbwebb.se/img.jpg"],
+            ["img.jpg"],
         ];
     }
 
@@ -55,14 +54,13 @@ class CImageRemoteDownloadTest extends \PHPUnit_Framework_TestCase
      * Test
      *
      * @return void
-     *
-     * @dataProvider providerValidRemoteSource
      */
+    #[DataProvider('providerValidRemoteSource')]
     public function testAllowRemoteDownloadDefaultPatternValid($source)
     {
         $img = new CImage();
         $img->setRemoteDownload(true, "");
-        
+
         $res = $img->isRemoteSource($source);
         $this->assertTrue($res, "Should be a valid remote source: '$source'.");
     }
@@ -73,14 +71,13 @@ class CImageRemoteDownloadTest extends \PHPUnit_Framework_TestCase
      * Test
      *
      * @return void
-     *
-     * @dataProvider providerInvalidRemoteSource
      */
+    #[DataProvider('providerInvalidRemoteSource')]
     public function testAllowRemoteDownloadDefaultPatternInvalid($source)
     {
         $img = new CImage();
         $img->setRemoteDownload(true, "");
-        
+
         $res = $img->isRemoteSource($source);
         $this->assertFalse($res, "Should not be a valid remote source: '$source'.");
     }
@@ -92,14 +89,12 @@ class CImageRemoteDownloadTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public function providerHostnameMatch()
+    public static function providerHostnameMatch()
     {
         return [
-            [
-                "any.facebook.com",
-                "images.ak.instagram.com",
-                "google.com",
-            ],
+            ["any.facebook.com"],
+            ["images.ak.instagram.com"],
+            ["www.google.com"],
         ];
     }
 
@@ -111,15 +106,13 @@ class CImageRemoteDownloadTest extends \PHPUnit_Framework_TestCase
      * @param string $hostname matches the whitelist
      *
      * @return void
-     *
-     * @dataProvider providerHostnameMatch
-     *
      */
+    #[DataProvider('providerHostnameMatch')]
     public function testRemoteHostWhitelistMatch($hostname)
     {
         $img = new CImage();
         $img->setRemoteHostWhitelist($this->remote_whitelist);
-        
+
         $res = $img->isRemoteSourceOnWhitelist("http://$hostname/img.jpg");
         $this->assertTrue($res, "Should be a valid hostname on the whitelist: '$hostname'.");
     }
@@ -131,14 +124,12 @@ class CImageRemoteDownloadTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public function providerHostnameNoMatch()
+    public static function providerHostnameNoMatch()
     {
         return [
-            [
-                "example.com",
-                ".com",
-                "img.jpg",
-            ],
+            ["example.com"],
+            [".com"],
+            ["img.jpg"],
         ];
     }
 
@@ -150,15 +141,13 @@ class CImageRemoteDownloadTest extends \PHPUnit_Framework_TestCase
      * @param string $hostname not matching the whitelist
      *
      * @return void
-     *
-     * @dataProvider providerHostnameNoMatch
-     *
      */
+    #[DataProvider('providerHostnameNoMatch')]
     public function testRemoteHostWhitelistNoMatch($hostname)
     {
         $img = new CImage();
         $img->setRemoteHostWhitelist($this->remote_whitelist);
-        
+
         $res = $img->isRemoteSourceOnWhitelist("http://$hostname/img.jpg");
         $this->assertFalse($res, "Should not be a valid hostname on the whitelist: '$hostname'.");
     }

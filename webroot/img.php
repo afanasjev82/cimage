@@ -435,7 +435,7 @@ $newWidth     = get(array('width', 'w'));
 $maxWidth     = getConfig('max_width', 2000);
 
 // Check to replace predefined size
-if (isset($sizes[$newWidth])) {
+if ($newWidth !== null && isset($sizes[$newWidth])) {
     $newWidth = $sizes[$newWidth];
 }
 
@@ -460,7 +460,7 @@ $newHeight = get(array('height', 'h'));
 $maxHeight = getConfig('max_height', 2000);
 
 // Check to replace predefined size
-if (isset($sizes[$newHeight])) {
+if ($newHeight !== null && isset($sizes[$newHeight])) {
     $newHeight = $sizes[$newHeight];
 }
 
@@ -499,7 +499,7 @@ $aspectRatios = call_user_func($aspectRatioConstant);
 $negateAspectRatio = ($aspectRatio && $aspectRatio[0] == '!') ? true : false;
 $aspectRatio = $negateAspectRatio ? substr($aspectRatio, 1) : $aspectRatio;
 
-if (isset($aspectRatios[$aspectRatio])) {
+if ($aspectRatio !== null && isset($aspectRatios[$aspectRatio])) {
     $aspectRatio = $aspectRatios[$aspectRatio];
 }
 

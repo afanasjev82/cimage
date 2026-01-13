@@ -3,24 +3,24 @@
  * A testclass
  *
  */
-class CImageSRGBTest extends \PHPUnit_Framework_TestCase
+class CImageSRGBTest extends \PHPUnit\Framework\TestCase
 {
     private $srgbDir = "srgb";
     private $cache;
     private $srgbColorProfile;
 
-    
-    
+
+
     /**
      * Setup before test
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->srgbColorProfile = __DIR__ . '/../icc/sRGB_IEC61966-2-1_black_scaled.icc';
         $this->cache = CACHE_PATH . "/" . $this->srgbDir;
-        
+
         if (!is_writable($this->cache)) {
             mkdir($this->cache);
         }

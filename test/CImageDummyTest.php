@@ -3,7 +3,7 @@
  * A testclass
  *
  */
-class CImageDummyTest extends \PHPUnit_Framework_TestCase
+class CImageDummyTest extends \PHPUnit\Framework\TestCase
 {
     const DUMMY = "__dummy__";
     private $cachepath;
@@ -15,7 +15,7 @@ class CImageDummyTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $cache = new CCache();
         $cache->setDir(CACHE_PATH);
@@ -46,7 +46,7 @@ class CImageDummyTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $cache = new CCache();
         $cache->setDir(CACHE_PATH);

@@ -1,9 +1,12 @@
 <?php
+
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * A testclass
  *
  */
-class CWhitelistTest extends \PHPUnit_Framework_TestCase
+class CWhitelistTest extends \PHPUnit\Framework\TestCase
 {
     /*
      * remote_whitelist
@@ -13,22 +16,20 @@ class CWhitelistTest extends \PHPUnit_Framework_TestCase
         '^(?:images|photos-[a-z])\.ak\.instagram\.com$',
         '\.google\.com$',
     ];
-    
-    
-    
+
+
+
     /**
      * Provider for hostname matching the whitelist.
      *
      * @return array
      */
-    public function providerHostnameMatch()
+    public static function providerHostnameMatch()
     {
         return [
-            [
-                "any.facebook.com",
-                "images.ak.instagram.com",
-                "google.com",
-            ],
+            ["any.facebook.com"],
+            ["images.ak.instagram.com"],
+            ["www.google.com"],
         ];
     }
 
@@ -39,14 +40,12 @@ class CWhitelistTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public function providerHostnameNoMatch()
+    public static function providerHostnameNoMatch()
     {
         return [
-            [
-                "example.com",
-                ".com",
-                "img.jpg",
-            ],
+            ["example.com"],
+            [".com"],
+            ["img.jpg"],
         ];
     }
 
@@ -58,15 +57,13 @@ class CWhitelistTest extends \PHPUnit_Framework_TestCase
      * @param string $hostname matches the whitelist
      *
      * @return void
-     *
-     * @dataProvider providerHostnameMatch
-     *
      */
+    #[DataProvider('providerHostnameMatch')]
     public function testRemoteHostWhitelistMatch($hostname)
     {
         $whitelist = new CWhitelist();
         $whitelist->set($this->remote_whitelist);
-        
+
         $res = $whitelist->check($hostname);
         $this->assertTrue($res, "Should be a valid hostname on the whitelist: '$hostname'.");
     }
@@ -79,15 +76,13 @@ class CWhitelistTest extends \PHPUnit_Framework_TestCase
      * @param string $hostname not matching the whitelist
      *
      * @return void
-     *
-     * @dataProvider providerHostnameNoMatch
-     *
      */
+    #[DataProvider('providerHostnameNoMatch')]
     public function testRemoteHostWhitelistNoMatch($hostname)
     {
         $whitelist = new CWhitelist();
         $whitelist->set($this->remote_whitelist);
-        
+
         $res = $whitelist->check($hostname);
         $this->assertFalse($res, "Should not be a valid hostname on the whitelist: '$hostname'.");
     }
@@ -97,13 +92,12 @@ class CWhitelistTest extends \PHPUnit_Framework_TestCase
     /**
      * Test
      *
-     * @expectedException Exception
-     *
      * @return void
      *
      */
     public function testInvalidFormat()
     {
+        $this->expectException(Exception::class);
         $whitelist = new CWhitelist();
         $whitelist->set("should fail");
     }
@@ -120,7 +114,7 @@ class CWhitelistTest extends \PHPUnit_Framework_TestCase
     {
         $whitelist = new CWhitelist();
         $whitelist->set($this->remote_whitelist);
-        
+
         $hostname = "";
         $res = $whitelist->check($hostname);
         $this->assertFalse($res, "Should not be a valid hostname on the whitelist: '$hostname'.");

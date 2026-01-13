@@ -3,7 +3,7 @@
  * A testclass
  *
  */
-class CCacheTest extends \PHPUnit_Framework_TestCase
+class CCacheTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test
@@ -25,12 +25,11 @@ class CCacheTest extends \PHPUnit_Framework_TestCase
     /**
      * Test
      *
-     * @expectedException Exception
-     *
      * @return void
      */
     public function testSetWrongCacheDir()
     {
+        $this->expectException(Exception::class);
         $cache = new CCache();
         $cache->setDir(CACHE_PATH . "/NO_EXISTS");
     }
@@ -46,14 +45,14 @@ class CCacheTest extends \PHPUnit_Framework_TestCase
     {
         $cache = new CCache();
         $cache->setDir(CACHE_PATH);
-        
+
         $subdir = "__test__";
         $cache->removeSubdir($subdir);
-        
+
         $exp = "does not exist";
         $res = $cache->getStatusOfSubdir($subdir, false);
         $this->assertEquals($exp, $res, "Subdir should not be created.");
-        
+
         $res = $cache->getPathToSubdir($subdir);
         $exp = realpath(CACHE_PATH . "/$subdir");
         $this->assertEquals($exp, $res, "Subdir path missmatch.");

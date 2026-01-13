@@ -151,8 +151,8 @@ class CRemoteImage
         if (defined("CIMAGE_USER_AGENT")) {
             $cimageVersion = CIMAGE_USER_AGENT;
         }
-        
-        $this->http->setHeader("User-Agent", "$cimageVersion (PHP/". phpversion() . " cURL)");
+
+        $this->http->setHeader("User-Agent", "$cimageVersion (PHP/" . phpversion() . " cURL)");
         $this->http->setHeader("Accept", "image/jpeg,image/png,image/gif");
 
         if ($this->useCache) {
@@ -173,15 +173,15 @@ class CRemoteImage
     public function save()
     {
         $this->cache = array();
-        $date         = $this->http->getDate(time());
-        $maxAge       = $this->http->getMaxAge($this->defaultMaxAge);
+        $date = $this->http->getDate(time());
+        $maxAge = $this->http->getMaxAge($this->defaultMaxAge);
         $lastModified = $this->http->getLastModified();
-        $type         = $this->http->getContentType();
+        $type = $this->http->getContentType();
 
-        $this->cache['Date']           = gmdate("D, d M Y H:i:s T", $date);
-        $this->cache['Max-Age']        = $maxAge;
-        $this->cache['Content-Type']   = $type;
-        $this->cache['Url']            = $this->url;
+        $this->cache['Date'] = gmdate("D, d M Y H:i:s T", $date);
+        $this->cache['Max-Age'] = $maxAge;
+        $this->cache['Content-Type'] = $type;
+        $this->cache['Url'] = $this->url;
 
         if ($lastModified) {
             $this->cache['Last-Modified'] = gmdate("D, d M Y H:i:s T", $lastModified);
@@ -209,11 +209,11 @@ class CRemoteImage
      */
     public function updateCacheDetails()
     {
-        $date         = $this->http->getDate(time());
-        $maxAge       = $this->http->getMaxAge($this->defaultMaxAge);
+        $date = $this->http->getDate(time());
+        $maxAge = $this->http->getMaxAge($this->defaultMaxAge);
         $lastModified = $this->http->getLastModified();
 
-        $this->cache['Date']    = gmdate("D, d M Y H:i:s T", $date);
+        $this->cache['Date'] = gmdate("D, d M Y H:i:s T", $date);
         $this->cache['Max-Age'] = $maxAge;
 
         if ($lastModified) {
@@ -297,10 +297,10 @@ class CRemoteImage
         $imageExists = is_readable($this->fileName);
 
         // Is cache valid?
-        $date   = strtotime($this->cache['Date']);
-        $maxAge = $this->cache['Max-Age'];
-        $now    = time();
-        
+        $date = strtotime($this->cache['Date'] ?? '');
+        $maxAge = $this->cache['Max-Age'] ?? 0;
+        $now = time();
+
         if ($imageExists && $date + $maxAge > $now) {
             return $this->fileName;
         }
